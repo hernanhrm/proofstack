@@ -1,0 +1,35 @@
+schema: human-steered
+
+context: |
+  Keep the human focused on product value and system consequences, not generated lines.
+  Investigate direct sources before questions; show key findings, distinguish facts from assumptions.
+  Challenge consequential choices when simpler alternatives, cost or evidence suggest a better outcome.
+  For spikes, investigate feasibility and conditional outcomes instead of assuming implementation.
+  Use ordinary repository files, local media and portable HTML/SVG; no proprietary artifact APIs.
+  Keep overview text roughly one screen; link detail. Do not invent decisions, tests or acceptance.
+  Prototype only: do not change Phoenix application code or external systems.
+
+rules:
+  proposal:
+    - Keep 5W + How together, at most 350 words excluding linked detail; omit irrelevant caveats.
+    - Separate user-visible outcomes from backend results and state exclusions.
+    - For existing features distinguish UI/API gates, configured/live flags and verified/unknown deployed revision.
+  specs:
+    - Use stable AC IDs in requirement titles, observable scenarios and explicit human/agent check ownership.
+    - Expected behavior is not observed evidence; keep the spec as the contract, not a test-results diary.
+  tasks:
+    - Include verification with each slice; record actual results and a safe reproducible setup in evidence.md.
+    - Plan plausible regression controls across the blast radius, not only focused happy-path tests.
+
+operations:
+  apply:
+    guidance:
+      - Execute checks, diagnose failures and fix/recheck within scope; never weaken criteria to obtain green.
+      - Record scenario, exact revision/content digest, environment, fixtures, command, actual result and evidence path in evidence.md.
+      - Distinguish component fixtures, API/DB and browser-to-DB evidence; record missing URL/role/fixtures as blocked.
+      - Preserve safe reproduction recipes before removing scratch tooling; refresh checks affected by code or dependency changes.
+      - Obtain an independent reviewer-agent check of requirements and engineering risks if available; otherwise record the gap, never label self-review independent.
+      - After implementation and executed checks, use OpenSpec verify, then writing-test-guides and reviewing-with-humans. Do not treat task completion as human acceptance.
+  archive:
+    guidance:
+      - Preserve evidence and actual acceptance state; archive is not UAT acceptance or a deployment.

@@ -1,0 +1,16 @@
+
+> check
+> node --test test/workflow.test.mjs
+
+✔ schema exposes plan readiness, executable context and honest task progress (864.412084ms)
+✔ strict validation rejects malformed scenarios; archive syncs valid specs and retains evidence (515.425875ms)
+✔ documentation-only changes skip specs without inventing requirements (397.417833ms)
+✔ two custom skills work beside stock workflows for Codex and Claude Code (148.766834ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1983.908375

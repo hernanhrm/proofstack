@@ -1,0 +1,51 @@
+{
+  "checks": [
+    {
+      "viewport": 720,
+      "theme": "light",
+      "state": "default",
+      "noHorizontalOverflow": true,
+      "detailControls": "closed",
+      "width": 720,
+      "scrollWidth": 720,
+      "height": 900,
+      "criteria": 3
+    },
+    {
+      "viewport": 720,
+      "theme": "light",
+      "state": "expanded",
+      "noHorizontalOverflow": true,
+      "detailControls": "opened by click",
+      "width": 720,
+      "scrollWidth": 705,
+      "height": 1132,
+      "criteria": 3
+    },
+    {
+      "viewport": 360,
+      "theme": "dark",
+      "state": "default",
+      "noHorizontalOverflow": true,
+      "detailControls": "closed",
+      "width": 360,
+      "scrollWidth": 345,
+      "height": 1008,
+      "criteria": 3
+    },
+    {
+      "viewport": 360,
+      "theme": "dark",
+      "state": "expanded",
+      "noHorizontalOverflow": true,
+      "detailControls": "opened by click",
+      "width": 360,
+      "scrollWidth": 345,
+      "height": 1798,
+      "criteria": 3
+    }
+  ],
+  "network": "offline",
+  "externalRequests": 0,
+  "scriptErrors": 0
+}
