@@ -1,4 +1,4 @@
-# Change and review skills
+# proofstack
 
 Standalone agent skills for exploring, planning, implementing and reviewing changes. The skills use ordinary Markdown files; they do not require the OpenSpec CLI or a hosted service.
 
@@ -7,8 +7,8 @@ Standalone agent skills for exploring, planning, implementing and reviewing chan
 The six skills are in `skills/<name>/SKILL.md`. Install them into the project where you want to use them, choosing your agent when prompted:
 
 ```sh
-npx skills@latest add /path/to/openspec-human-review --list
-npx skills@latest add /path/to/openspec-human-review --skill '*'
+npx skills@latest add /path/to/proofstack --list
+npx skills@latest add /path/to/proofstack --skill '*'
 ```
 
 Run the install command from the target project. To install just one skill, replace `'*'` with its name. Skills can also be copied from `skills/` to an agent's documented skill directory.
