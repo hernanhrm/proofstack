@@ -1,56 +1,36 @@
-# OpenSpec delivery + two portable review skills
+# Change and review skills
 
-Standalone workflow prototype, pinned to OpenSpec 1.16.0. No Phoenix application change, migration, deployment or formal approval machinery.
+Standalone agent skills for exploring, planning, implementing and reviewing changes. The skills use ordinary Markdown files; they do not require the OpenSpec CLI or a hosted service.
 
-## Try it
+## Install
 
-Clone this repository **outside the Phoenix checkout** and open its root in your agent. This avoids inheriting Phoenix's old six-skill setup. Node.js 22.12+ and npm are required; macOS/Linux shell commands below.
+The six skills are in `skills/<name>/SKILL.md`. Install them into the project where you want to use them, choosing your agent when prompted:
 
 ```sh
-npm ci --ignore-scripts --no-audit --no-fund
-export PATH="$PWD/node_modules/.bin:$PATH"
-export XDG_CONFIG_HOME="$PWD/profile" XDG_DATA_HOME="$PWD/.runtime/data"
-export OPENSPEC_TELEMETRY=0 DO_NOT_TRACK=1 OPENSPEC_NO_UPDATE_CHECK=1
-openspec schema validate human-steered
-npm run check
+npx skills@latest add /path/to/openspec-human-review --list
+npx skills@latest add /path/to/openspec-human-review --skill '*'
 ```
 
-Open `openspec/changes/portable-review-pilot/review.html` in any ordinary browser. No server, account, hosted artifact or network request is needed. `review.md`, `test-guide.md` and `evidence.md` are the corresponding plain-text records.
+Run the install command from the target project. To install just one skill, replace `'*'` with its name. Skills can also be copied from `skills/` to an agent's documented skill directory.
+
+The workflow's `merge-risk` skill is maintained by Warp and is not bundled here. Install it separately for the same agent:
+
+```sh
+npx skills@latest add warpdotdev/common-skills --skill merge-risk
+```
 
 ## Work with an agent
 
-The bundle includes stock OpenSpec skills for Codex (`.agents/skills/`) and Claude Code (`.claude/skills/`). Both expose the same two custom skills. Generated OpenSpec skills are upstream files, not custom workflow replacements.
+1. `understand` — clarify the problem in a 5W brief, capture criteria and resolve open questions.
+2. `design` — add acceptance scenarios that answer the brief, then write the technical design: before-and-after diagrams, decisions with ADRs and tasks.
+3. `implement` — build the change and record evidence.
+4. `verify` — check behavior and alignment with the plan.
+5. `merge-risk` — assess risk using Warp's external skill.
+6. `visual-diff` — explain the change for AI and human review, and mark each design scenario kept, broken or untested.
+7. `manual-test-guide` — prepare the final manual walkthrough after AI and human reviews have passed.
 
-| Step | Ask your agent |
-| --- | --- |
-| Explore | “Use OpenSpec explore for [request]. Investigate first; clarify value and scope.” |
-| Plan | “Use OpenSpec new and continue for [change]. Use human-steered; start with the 5W + How proposal.” |
-| Refine | “Use OpenSpec update to incorporate [decision].” |
-| Build | “Use OpenSpec apply. Execute the checks in the tasks; fix and recheck failures; preserve evidence.” |
-| Align | “Use OpenSpec verify for [change].” This reports plan/code alignment, not execution. |
-| Try | “Use writing-test-guides for [change].” |
-| Review | “Use reviewing-with-humans for [change]. Show architecture, actual evidence and what I should judge.” |
-| Finish | “Use OpenSpec archive for [change].” Archive is not deployment or human acceptance. |
+Resolve required AI and human review findings before preparing the manual guide. If either review is missing, failed or stale, the guide waits; a passing automated check or visual diff is not approval. Manual verification is the final check, not a substitute for either review.
 
-There are no formal approval gates. Human steering happens in the conversation; expected behavior stays in specs, choices in the proposal and observations in evidence. The CLI does not run agents or enforce the fix/recheck loop; the stock apply skill executes its tasks under the schema/config instructions. Harness capabilities and agent judgment still matter.
+Every stage writes to one directory per change, `docs/<ticket-number>/` (or a short kebab-case name without a ticket): `brief.md`, `acceptance.md`, `design.md`, `evidence.md` and `test-guide.md`. `acceptance.md` is the change's only acceptance table: `understand` adds the criteria, `design` adds scenarios under them, and `implement`, `verify`, `visual-diff` and `manual-test-guide` each fill their own column until every scenario is done. ADRs outlive a single change, so they go in the repository's ADR directory, `docs/adr/` by default. A user can name another directory. Planning, implementation, verification, human acceptance and deployment are distinct; no skill implies that a later stage happened.
 
-## What is customized
-
-- `openspec/config.yaml`: project context, compactness, investigation discipline, execution/evidence instructions and review handoff.
-- `openspec/schemas/human-steered/`: proposal (5W + How) → specs (ACs) → tasks. No separate design document.
-- `.agents/skills/reviewing-with-humans/` and `writing-test-guides/`: the **only two custom skills**, each standalone. Claude's copies link to these canonical files.
-- `profile/openspec/config.json`: isolated skills-only profile including optional new/continue/verify. It does not modify your normal global OpenSpec settings.
-
-`proposal.md` deliberately keeps OpenSpec's native filename so `openspec show` works. Review is one compact entry point, not a second independently edited requirements document. Regenerate HTML when its source records change.
-
-## Refresh or use another harness
-
-With the environment above, run `openspec init --tools codex,claude --profile custom --no-animation` to regenerate the two demonstrated integrations. For another supported harness, select its tool ID instead, and copy the **two canonical custom skill directories** to that harness's documented skills location if it does not read `.agents/skills/`. OpenSpec installs its own skills, not ours. Skill invocation syntax varies by harness.
-
-The custom skills contain no tool-specific permissions, proprietary APIs, or dependencies on the four replaced delivery skills. Setup generation has been checked for two harnesses; full live agent sessions on multiple harnesses have not been run.
-
-## Verification and limits
-
-`npm run check` uses the actual CLI in disposable directories: schema/readiness and mixed task progress; strict validation including a malformed-spec rejection; archive/spec-sync with evidence preservation; docs-only spec skipping; two-harness skill generation preserving custom skills. No temporary directories survive the checks.
-
-The pilot demonstrates this infrastructure, not a shipped Phoenix feature or faster human review. Human acceptance and independent reviewer-agent findings remain pending. The old Phoenix skills and ignore policy are unchanged. To adopt later, remove the prototype-only scope restriction in config and deliberately install/version the chosen setup in the real repo; do not copy this pilot's fictional capability into Phoenix's product specs.
+`visual-diff` also works independently of this workflow. It saves portable Markdown with Mermaid diagrams and scenario-based test tables under `.code-diff/reviews/`, locally excluded through Git's info/exclude file. Git exclusions are not access controls.
