@@ -5,7 +5,7 @@ description: "Creates a concise, reproducible final manual verification walkthro
 
 # Guided test
 
-Manual verification is the last stage: a person checks the finished change once, after every other stage and both reviews have passed. The guide is instructions; results go to the **Manual** column of `acceptance.md`, with detail in `evidence.md`.
+Manual verification is the last stage: a person checks the finished change once, after every other stage and both reviews have passed. The guide is instructions; results go to the **Manual** column of `acceptance.md`, with concise limitations in **Gap**. Do not create or update `evidence.md` or a replacement evidence log.
 
 ## Check the gate
 
@@ -16,11 +16,11 @@ By default, the change is in `docs/<ticket-number>/`; use another directory the 
 - **Review** is kept or untested, never empty or broken.
 - The user has accepted each untested, not verified or ⚠ row.
 
-Then check that the `Review` entry in `evidence.md` names the revision you will test; later commits make the review stale. Check the human review result, such as a PR approval or the user's statement, for that revision. If anything fails, report exactly which rows or reviews block the guide and wait; do not infer approval from tests or a visual diff.
+Then confirm from the review conversation or PR that the AI review applies to the implementation you will test; later implementation changes make affected review results stale. Check the human review result, such as a PR approval or the user's statement, for that state. If the reviewed state is unclear, ask. If anything fails, report exactly which rows or reviews block the guide and wait; do not infer approval from tests or a visual diff.
 
 ## Write `test-guide.md`
 
-Read `acceptance.md`, `design.md` with its linked ADRs, `brief.md` and `evidence.md`. Take environments, flag values and deploy order from the design's Rollout, the main journey from its After diagram, the people and roles from the brief, and the revision, fixtures and setup recipes from `evidence.md`. Inspect the real implementation. If setup is missing, state exactly what blocks it rather than inventing URLs, credentials or fixture IDs.
+Read `acceptance.md`, `design.md` with its linked ADRs and `brief.md`. Take environments, flag values and deploy order from the design's Rollout, the main journey from its After diagram, and the people and roles from the brief. Inspect the real implementation and available test setup to establish the revision, safe fixtures and setup steps. If setup is missing, state exactly what blocks it rather than inventing URLs, credentials or fixture IDs.
 
 Start the file with links to `acceptance.md` and `design.md` and the exact revision under test. Then write one block per walkthrough, tersely, with step-level observable results; reference scenarios by ID instead of restating them:
 
@@ -36,7 +36,7 @@ Cover every scenario whose Check is human check, plus the main journey and one i
 
 ## Record results
 
-When you write the guide, set **Manual** to pending for every scenario a walkthrough covers and to — for the rest: automated checks and code reviews already settle them, and production metrics (S rows) are measured after release under the design's Rollout. Set pass or fail only after a person reports the result, and record the tester, time, observed result and evidence path in `evidence.md` under the scenario ID. Agent checks, a written guide or a general yes are not human results.
+When you write the guide, set **Manual** to pending for every scenario a walkthrough covers and to — for the rest: automated checks and code reviews already settle them, and production metrics (S rows) are measured after release under the design's Rollout. Set pass or fail only after a person reports the result; put failures or limitations in **Gap**. Keep detailed observations in the conversation. Agent checks, a written guide or a general yes are not human results.
 
 When every Manual cell is pass or —, check the done rule in `acceptance.md`'s legend and report the change ready. Ready is not deployment, and success measures stay unmeasured until production data exists.
 

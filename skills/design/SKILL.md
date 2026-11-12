@@ -17,7 +17,7 @@ If an existing change is ambiguous, ask which one to update. For an existing cha
 
 ## Write `design.md`
 
-Write tersely: fragments, arrows and labels such as "Not:" and "Cost:" are fine, and articles and filler can go. Keep negations, numbers, identifiers, paths and error text exact, because `verify` and `visual-diff` check against them. Use these sections in order:
+Write tersely: fragments, arrows and labels such as "Not:" and "Cost:" are fine, and articles and filler can go. Keep negations, numbers, identifiers, paths and error text exact, because `verify-acceptance-criteria` and `visual-diff` check against them. Use these sections in order:
 
 Start `design.md` with links to `brief.md` and `acceptance.md`, the baseline revision and any ADRs. The scenarios live only in `acceptance.md`; never copy them into `design.md`.
 
@@ -29,6 +29,12 @@ Start `design.md` with links to `brief.md` and `acceptance.md`, the baseline rev
 6. **Open questions:** brief questions no decision fully answers, new ones the design raises numbered N1, N2…, and assumptions.
 
 Use fenced `mermaid` blocks with notes readable without hover. Keep each diagram focused and omit unaffected structure.
+
+### Make scenarios independently judgeable
+
+Merge scenarios only when they share both a check and one independently judgeable outcome. Split subcases that can have different statuses or require different environments, even if one test command covers them. A blocked deployment check or defensive edge case must not obscure passing local checks.
+
+Before promising a fixture, inspect relevant schema constraints, contracts and test setup to confirm the state is representable. If a proposed case is impossible in the supported system, explain why and recommend omitting the unnecessary requirement or testing the defensive behavior separately where justified. Surface conflicts with an approved design for the user's decision; do not silently remove requirements, relax real constraints or expand the harness merely to manufacture an impossible fixture.
 
 ## Write ADRs
 
