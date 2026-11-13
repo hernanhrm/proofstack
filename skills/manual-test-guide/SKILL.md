@@ -5,7 +5,7 @@ description: "Creates a concise, reproducible final manual verification walkthro
 
 # Guided test
 
-Manual verification is the last stage: a person checks the finished change once, after every other stage and both reviews have passed. The guide is instructions; results go to the **Manual** column of `acceptance.md`, with concise limitations in **Gap**. Do not create or update `evidence.md` or a replacement evidence log.
+Manual verification is the last stage: a person checks the finished change once, after every other stage and both reviews have passed. The guide is instructions; results go to the **Manual** column of `acceptance.md`, with concise limitations in **Gap**.
 
 ## Check the gate
 
@@ -21,6 +21,8 @@ Then confirm from the review conversation or PR that the AI review applies to th
 ## Write `test-guide.md`
 
 Read `acceptance.md`, `design.md` with its linked ADRs and `brief.md`. Take environments, flag values and deploy order from the design's Rollout, the main journey from its After diagram, and the people and roles from the brief. Inspect the real implementation and available test setup to establish the revision, safe fixtures and setup steps. If setup is missing, state exactly what blocks it rather than inventing URLs, credentials or fixture IDs.
+
+Reuse the setup, inputs and observed journeys from `verify-acceptance-criteria` when they apply to the current revision and environment. Recheck fixture availability and authorization; prior agent execution does not count as the user's final check.
 
 Start the file with links to `acceptance.md` and `design.md` and the exact revision under test. Then write one block per walkthrough, tersely, with step-level observable results; reference scenarios by ID instead of restating them:
 

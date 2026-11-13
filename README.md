@@ -22,8 +22,8 @@ npx skills add https://github.com/t3dotgg/tstack --skill council
 
 ## Work with an agent
 
-1. `understand` — clarify the problem in a 5W brief, capture criteria and resolve open questions.
-2. `design` — add acceptance scenarios that answer the brief, then write the technical design: before-and-after diagrams, decisions with ADRs and tasks.
+1. `understand` — start with why and why now, identify who benefits, and agree on the smallest worthwhile change and its acceptance criteria.
+2. `design` — add acceptance scenarios that answer the brief, then write the technical design: before-and-after diagrams, decisions and relevant ADRs.
 3. `implement` — build the change and mark implementation status in the acceptance table.
 4. `validation-loop` — orchestrate external `council`, external `merge-risk`, then fresh-agent `verify-acceptance-criteria`. Any implementation correction restarts at council; finish only when all gates pass on the same state or a blocker needs a decision.
 5. `verify-acceptance-criteria` (formerly `verify`) can also run independently to check the implementation against acceptance scenarios and mark the table.

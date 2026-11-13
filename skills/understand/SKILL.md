@@ -1,47 +1,70 @@
 ---
 name: understand
-description: "Investigates a problem and resolves open questions with the user. Use to reach a shared understanding before designing a change."
+description: "Clarify why a change matters, who benefits and the smallest worthwhile scope. Use before designing a change."
 ---
 
-# Explore a change
+# Start with why
 
-Investigate the request, relevant code, existing behavior and available project context before asking questions. Separate observations, reports, assumptions and unknowns; distinguish confirmed decisions from suggestions. For a spike, clarify what needs to be learned rather than assuming a feature will be built.
+Inspired by Simon Sinek's *Start with Why*: understand the purpose before choosing a solution.
 
-## Resolve questions in conversation
+## Find the purpose
 
-Investigate unresolved questions that available evidence can answer. Keep findings, proposed scope and questions in the conversation until all material questions are resolved and the user has confirmed the problem, scope and decisions. Number questions Q1, Q2…; explain what their answers unblock and distinguish recommendations awaiting approval from confirmed decisions. Do not treat silence or assumptions as agreement.
+Use the request and available project context first. Ask only what is missing, a few questions at a time:
 
-Do not create or update `brief.md` or `acceptance.md` while questions remain open or recommendations await approval. After each answer, update the conversational understanding and ask any remaining questions. If investigation uncovers another material unknown, resolve it before writing either file.
+- **Why this?** What problem or opportunity makes a change worthwhile?
+- **Why now?** What changed, or what happens if we do nothing?
+- **Who benefits, and how?** What value would they gain?
+- **When and where?** In which situation or part of their journey does that value matter?
 
-## Write the agreed brief
+Treat these as conversation prompts, not a mandatory questionnaire. Investigate code only when it helps answer them. Distinguish evidence from assumptions; do not invent urgency, beneficiaries or value.
 
-Once shared understanding is confirmed, write a concise **5W** brief:
+## Agree on the smallest worthwhile change
 
-- **Why:** the problem and the value of addressing it.
-- **Who:** the people and high-level systems affected, describing each system's role in plain language.
-- **What:** current behavior and scope.
-- **Where:** the affected user journeys, parts of the product and high-level system boundaries.
-- **When:** when the problem occurs or the change applies; timing and rollout if known.
+Summarize the purpose, the smallest scope that could deliver value, what stays out and how we would know it helped. For an investigation, define what we need to learn instead of assuming a feature must be built.
 
-Write for a product manager with no technical knowledge. Use only plain-language text and fenced Mermaid diagrams to explain the problem, current behavior and agreed scope. Include at least one diagram showing the affected journey or before-and-after user-visible behavior; label it in product terms, not code or infrastructure terms. You may name affected systems at a high level when it helps explain responsibility or scope, but explain their role in everyday language (for example, "Game catalogue — controls which games players can discover"). Do not include code references, file paths, line numbers, symbols, code snippets, API routes or implementation details. Translate technical findings into their observable effects on people using the product. Keep code-level evidence in the conversation, not the brief.
+Resolve questions that would change the purpose or scope and ask the user to confirm the summary before saving it. Leave non-blocking unknowns explicit rather than expanding the MVP to answer everything. Do not choose an implementation or build the change.
 
-The brief records agreed understanding, not an open-question log or a technical design. Do not propose or choose an implementation.
+## Save the agreement
 
-## Record agreed acceptance criteria
+Use `docs/<ticket-number>/`, taking the ticket from the user, branch or PR; without one, agree on a short kebab-case name. Read existing files before updating them and preserve unrelated content.
 
-Write the criteria to `acceptance.md`, not the brief. It is the change's single acceptance table: later stages add scenario rows under each criterion and each fills only its own column, so the criteria are never copied into other files. Add one row per criterion, with stable IDs:
+- **`brief.md`:** a short, plain-language account of why this matters, why now, who benefits, when and where, and the agreed MVP and exclusions. No required diagram or technical design.
+- **`acceptance.md`:** the single acceptance table for downstream skills. Add agreed criteria with stable IDs: **S1…** for desired value and success measures (targets and timeframe only when known), **AC1…** for observable behavior or constraints, and **X1…** for exclusions. Do not turn assumptions into requirements.
 
-- **S1, S2…** success: the desired result and who benefits, its measure, and the baseline, target and timeframe when known.
-- **AC1, AC2…** acceptance: an observable behavior or constraint the change must satisfy.
-- **X1, X2…** exclusions: what the change leaves out.
+Use this format for `brief.md`. Keep each section to a short paragraph or a few bullets. Omit **Unknowns** when none remain; state when timing or context is unknown rather than inventing it. Keep detailed criteria and measures in `acceptance.md`, linked rather than copied here.
 
-Create the file with this legend and header, and leave the other columns empty:
+```markdown
+# <Change title>
+
+## Why
+<Problem or opportunity, why it matters, and why this change is worth pursuing.>
+
+## Why now
+<What changed or what happens if we do nothing; note if there is no urgency.>
+
+## Who benefits
+<Who gains value and what becomes better for them.>
+
+## When and where
+<The situation and part of the journey where the problem occurs and the value matters.>
+
+## Smallest worthwhile change
+<The smallest outcome worth delivering in this iteration and the value it adds. See [acceptance criteria](acceptance.md) for observable checks and measures.>
+
+## Not now
+<What we deliberately leave out of this iteration.>
+
+## Unknowns
+<Non-blocking unknowns and assumptions that still need checking.>
+```
+
+Use this acceptance header and legend, leaving stage columns empty. Later skills add scenario rows and fill their own columns:
 
 ```markdown
 # <ticket-number> acceptance
 
 Check: unit test · integration test · e2e test · human check · code review · production metric
-Implement: done T<n> · blocked · not run. Verify: pass · fail · not verified. Review: kept · broken · untested. Manual: pending · pass · fail.
+Implement: done · blocked · not run. Verify: pass · fail · not verified. Review: kept · broken · untested. Manual: pending · pass · fail.
 Empty = stage not reached; — = not applicable. Stage columns apply to scenario rows such as AC1.1. Done when no scenario cell is empty, failing, broken or blocked, and the user has accepted any untested or ⚠ row.
 
 | ID | Scenario → expected | Check | Gap | Implement | Verify | Review | Manual |
@@ -49,8 +72,4 @@ Empty = stage not reached; — = not applicable. Stage columns apply to scenario
 | **AC1** | <criterion> | | | | | | |
 ```
 
-Write criteria only from the resolved, agreed scope; do not turn assumptions or unapproved recommendations into requirements.
-
-## Save and hand off
-
-Only after all material questions are resolved and the user has confirmed shared understanding, save the 5W brief and diagrams to `docs/<ticket-number>/brief.md` and the criteria to `docs/<ticket-number>/acceptance.md`, such as `docs/PROJ-123/`. Take the ticket number from the user, branch or PR; without one, ask, or use a short kebab-case name if the user has no ticket. If a file exists, read it first and preserve content you did not write; keep pending revisions in the conversation until the same resolution gate is met. Write no other files and do not implement while exploring. Use `design` when the user asks to plan the change.
+Write only these two files. Hand off to `design` when the user asks to plan the implementation.
