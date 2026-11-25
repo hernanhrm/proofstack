@@ -1,0 +1,42 @@
+%% @title Checkout now checks fraud before charging; the manual review queue goes away
+%% @subtitle Proposed change to checkout. Play it, or pick the decline branch.
+%% @caption If the fraud check declines, the shop gets a decline and nothing is charged.
+sequenceDiagram
+  participant Shop
+  participant O as orders service
+  participant DB as DB: orders
+  participant F as Fraud API
+  participant P as Payments API
+  Shop->>O: Place order
+  %% @detail: Existing endpoint.
+  %% @raw: POST /orders
+  %%| {"cart_id": "c_9", "total": 49.90}
+  O->>DB: INSERT order (pending)
+  %% @changed: New fraud_score column.
+  %% @raw: INSERT INTO orders (id, total, status, fraud_score) VALUES ('o_123', 49.90, 'pending', NULL)
+  DB-->>O: order o_123
+  O->>F: POST /score
+  %% @new: Scores the order before any money moves.
+  %% @raw: POST /score
+  %%| {"order_id": "o_123", "amount": 49.90}
+  F-->>O: score 0.12
+  %% @new
+  %% @raw: {"score": 0.12, "decision": "accept"}
+  alt accepted
+    O->>P: Charge card
+    %% @detail: Unchanged.
+    %% @raw: POST /charges {"amount": 4990, "currency": "eur"}
+    P-->>O: Charged
+    O->>O: Queue for manual review
+    %% @removed: No longer needed: the fraud score replaces it.
+    O-->>Shop: Order confirmed
+  else declined
+    O->>DB: UPDATE order (declined)
+    %% @new: Keeps the score for audits.
+    %% @raw: UPDATE orders SET status = 'declined', fraud_score = 0.91 WHERE id = 'o_123'
+    DB-->>O: ok
+    O-->>Shop: Declined
+    %% @new
+  end
+  %% @DB detail: Table orders in the main Postgres database.
+  %% @F new: External vendor, 300 ms p99.

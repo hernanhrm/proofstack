@@ -1,0 +1,11 @@
+%% @title A wrong code sends you back to retry, up to three times
+%% @subtitle Today's sign-in with a one-time code. No status colours: this is current behaviour.
+flowchart LR
+  start([Open app]) --> email[Enter email]
+  email --> send[Send code]
+  send --> code[Enter code]
+  code --> check{Code correct?}
+  check -->|yes| home([Signed in])
+  check -->|no| tries{Tries left?}
+  tries -->|yes| code
+  tries -->|no| locked([Locked 15 min])

@@ -1,0 +1,97 @@
+.ip { --ip-gap: 12px; color: var(--foreground); font: 13px/20px var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif); outline: none; }
+.ip ~ .ip { margin-top: 48px; }
+.ip p { margin: 0; }
+.ip-title { font-size: 13px; font-weight: 500; text-wrap: balance; }
+.ip-sub, .ip-caption, .ip-muted { color: var(--muted-foreground); }
+.ip-sub { font-size: 12px; text-wrap: pretty; }
+.ip-caption { font-size: 11px; line-height: 16px; text-wrap: pretty; }
+.ip-header { margin-bottom: 12px; }
+.ip-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 8px; }
+.ip-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 8px; }
+.ip-bar .ip-spacer { flex: 1; }
+.ip-btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 28px; min-width: 28px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: var(--foreground); font: inherit; font-size: 12px; cursor: pointer; box-shadow: inset 0 0 0 1px var(--border); }
+.ip-btn svg { width: 14px; height: 14px; }
+.ip-btn.primary { background: var(--foreground); color: var(--background); box-shadow: none; }
+.ip-btn:disabled { color: var(--muted-foreground); cursor: default; opacity: 0.6; }
+.ip-btn:active:not(:disabled) { transform: scale(0.97); }
+@media (hover: hover) { .ip-btn:hover:not(:disabled) { background: var(--muted); } .ip-btn.primary:hover:not(:disabled) { background: var(--foreground); opacity: 0.85; } }
+.ip-btn:focus-visible, .ip-select:focus-visible, .ip-step:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
+.ip-count { font-size: 12px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; min-width: 72px; }
+.ip-select { height: 28px; max-width: min(100%, 280px); min-width: 0; padding: 0 6px; border: 0; border-radius: 6px; background: var(--background); color: var(--foreground); font: inherit; font-size: 12px; box-shadow: inset 0 0 0 1px var(--border); }
+.ip [hidden] { display: none !important; }
+
+/* Canvas: the diagram zooms and pans inside a framed surface; the controls float in its corner. */
+.ip-canvas { position: relative; border-radius: 10px; background: var(--card, transparent); box-shadow: inset 0 0 0 1px var(--border); overflow: hidden; }
+.ip-stage { padding: 40px 12px 12px; }
+.ip-stage svg.pele { display: block; margin: 0 auto; max-width: 100%; height: auto; overflow: hidden; }
+.ip-zoomed .ip-stage { cursor: grab; touch-action: none; }
+.ip-dragging .ip-stage, .ip-dragging .ip-stage * { cursor: grabbing !important; }
+.ip-zoom { position: absolute; top: 8px; right: 8px; z-index: 2; display: flex; align-items: center; gap: 2px; padding: 2px; border-radius: 8px; background: var(--background); box-shadow: 0 0 0 1px var(--border); }
+.ip-zbtn { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 0 4px; border: 0; border-radius: 6px; background: transparent; color: var(--muted-foreground); font: inherit; font-size: 11px; font-variant-numeric: tabular-nums; cursor: pointer; }
+.ip-zbtn svg { width: 14px; height: 14px; }
+.ip-zpct { min-width: 40px; }
+.ip-zbtn:disabled { opacity: 0.45; cursor: default; }
+@media (hover: hover) { .ip-zbtn:hover:not(:disabled) { background: var(--muted); color: var(--foreground); } }
+.ip-zbtn:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
+
+/* Decision dialog: floats beside the decision, away from the branches it offers. */
+.ip-ask { position: absolute; z-index: 3; box-sizing: border-box; width: 264px; padding: 12px; border-radius: 10px; background: var(--background); box-shadow: 0 0 0 1px var(--border), 0 8px 24px -8px rgb(0 0 0 / 0.28); animation: ip-in 160ms ease-out; }
+.ip-ask.ip-docked { left: 8px !important; right: 8px; top: auto !important; bottom: 8px; width: auto; }
+.ip-ask-title { font-weight: 500; text-wrap: balance; }
+.ip-ask-sub { margin-bottom: 8px !important; font-size: 12px; color: var(--muted-foreground); }
+.ip-ask-opt { display: flex; align-items: center; gap: 8px; width: 100%; margin-top: 4px; padding: 6px 8px; border: 0; border-radius: 6px; background: transparent; box-shadow: inset 0 0 0 1px var(--border); color: var(--foreground); font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+.ip-ask-opt:focus-visible { outline: none; }
+.ip-ask-opt:is(:focus-visible, .ip-hot) { background: var(--muted); box-shadow: inset 0 0 0 1.5px var(--link); }
+.ip-ask-opt:active { transform: scale(0.98); }
+.ip-ask-l { color: var(--link); }
+.ip-ask-to { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted-foreground); }
+.ip-kbd { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--border); color: var(--muted-foreground); font-size: 11px; }
+@keyframes ip-in { from { opacity: 0; transform: translateY(2px); } }
+@media (prefers-reduced-motion: reduce) { .ip-ask { animation: none; } }
+.ip-stage .pele-node, .ip-stage .pele-cluster, .ip-stage .pele-edge, .ip-stage .pele-edge-label, .ip-stage .pele-note { cursor: pointer; }
+
+/* Pele theme from the host tokens (Amp supplies them in a visual artifact; the page defines them otherwise). */
+.ip { --pele-bg: var(--background); --pele-fg: var(--foreground); --pele-muted: var(--muted-foreground); --pele-line: var(--muted-foreground); --pele-surface: var(--background); --pele-surface-alt: var(--muted); --pele-border: var(--muted-foreground); --pele-accent: var(--link); --pele-font: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif); --pele-font-mono: var(--font-mono, ui-monospace, monospace); --pele-radius: 6px; }
+
+/* Status colours: green new, orange changed, red removed, gray unchanged. */
+.ip .ip-new { --ip-s: var(--success); }
+.ip .ip-changed { --ip-s: var(--warning); }
+.ip .ip-removed { --ip-s: var(--destructive); }
+.ip :is(.pele-node, .pele-cluster):is(.ip-new, .ip-changed, .ip-removed) > :not(text) { stroke: var(--ip-s); stroke-width: 2px; }
+.ip .pele-edge:is(.ip-new, .ip-changed, .ip-removed) { stroke: var(--ip-s); }
+.ip .pele-edge:is(.ip-new, .ip-changed, .ip-removed) path:not(.pele-marker) { stroke-width: 2px; }
+.ip .pele-edge:is(.ip-new, .ip-changed, .ip-removed) .pele-marker:not([fill="none"]) { fill: var(--ip-s); }
+.ip .pele-edge:is(.ip-new, .ip-changed, .ip-removed) .pele-marker:not([stroke="none"]) { stroke: var(--ip-s); }
+.ip .pele-edge-label:is(.ip-new, .ip-changed, .ip-removed) text { fill: var(--ip-s); }
+.ip .ip-removed > :not(text) { stroke-dasharray: 5 4; }
+.ip :is(.pele-node, .pele-edge-label).ip-removed text { text-decoration: line-through; }
+
+/* Playback overlay */
+.ip .ip-trail path { fill: none; stroke: var(--link); stroke-width: 7px; stroke-linecap: round; stroke-linejoin: round; opacity: 0.22; pointer-events: none; }
+.ip .ip-trail path.ip-cand { stroke-width: 2px; stroke-dasharray: 2 5; opacity: 1; }
+.ip .ip-focus { fill: none; stroke: var(--link); stroke-width: 2px; pointer-events: none; }
+.ip .ip-focus.ip-pick { stroke-width: 1.5px; stroke-dasharray: 4 3; }
+.ip .ip-trail path.ip-cand.ip-hot { stroke-width: 7px; stroke-dasharray: none; opacity: 0.35; }
+.ip .ip-focus.ip-pick.ip-hot { stroke-width: 2.5px; stroke-dasharray: none; }
+.ip .ip-focus.ip-sel { stroke: var(--muted-foreground); stroke-width: 1.5px; stroke-dasharray: 2 3; }
+.ip .ip-token { fill: var(--link); stroke: var(--background); stroke-width: 2.5px; pointer-events: none; }
+.ip .ip-token-halo { fill: var(--link); opacity: 0.18; pointer-events: none; }
+
+/* Steps and details */
+.ip-below { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 12px; }
+@media (min-width: 640px) { .ip-below { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+.ip-steps { list-style: none; margin: 0; padding: 0; }
+.ip-step { display: flex; gap: 6px; width: 100%; padding: 2px 6px; border: 0; border-radius: 6px; background: transparent; color: var(--foreground); font: inherit; font-size: 12px; line-height: 20px; text-align: left; cursor: pointer; }
+.ip-step .ip-n { flex: none; min-width: 18px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; text-align: right; }
+.ip-step .ip-l { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ip-step.ip-future .ip-l { color: var(--muted-foreground); }
+.ip-step[aria-current="step"] { background: var(--muted); }
+.ip-step[aria-current="step"] .ip-n { color: var(--link); }
+@media (hover: hover) { .ip-step:hover { background: var(--muted); } }
+.ip-detail { min-width: 0; }
+.ip-detail .ip-d { color: var(--muted-foreground); text-wrap: pretty; max-width: 65ch; }
+.ip-detail pre { margin: 6px 0 0; padding: 10px 12px; border-radius: 8px; background: var(--card, transparent); box-shadow: inset 0 0 0 1px var(--border); font: 11px/16px var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace); white-space: pre-wrap; overflow-wrap: anywhere; }
+.ip-g-new { color: var(--success); } .ip-g-changed { color: var(--warning); } .ip-g-removed { color: var(--destructive); }
+.ip-strike { text-decoration: line-through; }
+.ip-foot { margin-top: 12px; }
+@media print { .ip-bar, .ip-zoom, .ip-ask, .ip-hint { display: none; } }

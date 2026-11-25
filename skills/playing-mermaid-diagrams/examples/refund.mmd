@@ -1,0 +1,26 @@
+%% @title Refunds under €50 are approved automatically; bigger ones still go to a person
+%% @subtitle Proposed refund flow. Pick a branch at each decision, or play a named path.
+%% @caption Only the amount check is new; the email to an agent goes away.
+%% @path Small refund, approved automatically: ask > ok > small > issued > done
+flowchart TD
+  ask([Customer asks for a refund]) --> ok{Order refundable?}
+  ok -->|no| refused[Refused, reason shown]
+  ok -->|yes| small{Amount under €50?}
+  small -->|yes| issued[Refund issued]
+  small -->|no| agent[Agent reviews it]
+  agent -->|approves| email[Email the agent for approval]
+  email --> issued
+  agent -->|rejects| refused
+  issued --> done([Done])
+  refused --> done
+
+  %% @ask detail: From the order page. The shop sends the order id and a reason.
+  %% @ask raw: POST /refunds
+  %%| {"order_id": "o_123", "reason": "damaged"}
+  %% @ok detail: Within 30 days and not used.
+  %% @small new: The €50 limit is configuration, not code.
+  %% @small raw: SELECT value FROM settings WHERE key = 'auto_refund_limit_eur'
+  %% @email removed: Replaced by the amount check above.
+  %% @issued changed: Now records who or what approved it.
+  %% @issued raw: UPDATE refunds SET status = 'issued', approved_by = 'auto' WHERE id = 'r_88'
+  %% @small->issued new: The automatic path.
